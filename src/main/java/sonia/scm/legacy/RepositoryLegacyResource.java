@@ -17,8 +17,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.IOException;
 import java.util.Collection;
@@ -68,6 +70,25 @@ public class RepositoryLegacyResource {
             return Response.ok(new LegacyRepositoryDto(repository)).build();
         }
     }
+
+    @Path("/repositories/{id}/content")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(@PathParam("id") String id, @QueryParam("path") String path, @QueryParam("revision") String revision) {
+        RepositoryPermissions.read(id).check();
+
+        return Response.ok(createStreamingOutput(id, revision, path)).build();
+    }
+
+    private StreamingOutput createStreamingOutput(String repositoryId, String revision, String path) {
+        return os -> {
+            try (RepositoryService repositoryService = serviceFactory.create(repositoryId)) {
+                repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
+                os.close();
+            }
+        };
+    }
+
     @Path("/repositories/{id}/branches.json")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
