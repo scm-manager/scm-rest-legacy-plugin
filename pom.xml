@@ -26,11 +26,11 @@
     and http://maven.apache.org/pom.html.
   -->
   <groupId>sonia.scm.plugins</groupId>
-  <artifactId>scm-legacy-plugin</artifactId>
+  <artifactId>scm-rest-legacy-plugin</artifactId>
   <version>2.0-SNAPSHOT</version>
   <packaging>smp</packaging>
-  <name>scm-legacy-plugin</name>
-  <url>https://bitbucket.org/sdorra/scm-legacy-plugin</url>
+  <name>scm-rest-legacy-plugin</name>
+  <url>https://bitbucket.org/sdorra/scm-rest-legacy-plugin</url>
   <description>This plugin offers a subset of the SCM-Manager v1 REST API.</description>
   
   <!--
@@ -38,9 +38,9 @@
     For more informations have a look at: http://maven.apache.org/pom.html#SCM
   -->
   <scm>
-    <connection>scm:git:https://bitbucket.org/scm-manager/scm-legacy-plugin</connection>
-    <developerConnection>scm:git:https://bitbucket.org/scm-manager/scm-legacy-plugin</developerConnection>
-    <url>https://bitbucket.org/scm-manager/scm-legacy-plugin</url>
+    <connection>scm:git:https://bitbucket.org/scm-manager/scm-rest-legacy-plugin</connection>
+    <developerConnection>scm:git:https://bitbucket.org/scm-manager/scm-rest-legacy-plugin</developerConnection>
+    <url>https://bitbucket.org/scm-manager/scm-rest-legacy-plugin</url>
   </scm>
   
   <!--
