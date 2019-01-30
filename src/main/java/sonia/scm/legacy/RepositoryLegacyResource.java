@@ -26,18 +26,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 @Path("rest")
 public class RepositoryLegacyResource {
@@ -51,7 +46,7 @@ public class RepositoryLegacyResource {
         this.serviceFactory = serviceFactory;
     }
 
-    @Path("/repositories.json")
+    @Path("/repositories{format: .*}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
@@ -99,7 +94,7 @@ public class RepositoryLegacyResource {
         };
     }
 
-    @Path("/repositories/{id}/branches.json")
+    @Path(value = "/repositories/{id}/branches{format: .*}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBranches(@PathParam("id") String id) throws IOException {
@@ -111,7 +106,7 @@ public class RepositoryLegacyResource {
         }
     }
 
-    @Path("/repositories/{id}/changesets.json")
+    @Path("/repositories/{id}/changesets{format: .*}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getChangesets(@PathParam("id") String id, @QueryParam("limit") int limit) throws IOException {
