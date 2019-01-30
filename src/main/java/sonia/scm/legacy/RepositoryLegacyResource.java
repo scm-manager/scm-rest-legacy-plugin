@@ -24,6 +24,7 @@ import javax.ws.rs.core.StreamingOutput;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Comparator.comparing;
@@ -97,7 +98,7 @@ public class RepositoryLegacyResource {
 
         try (RepositoryService repositoryService = serviceFactory.create(id)) {
             Branches branches = repositoryService.getBranchesCommand().getBranches();
-            return Response.ok(branches.getBranches().stream().map(LegacyBranchDto::new).collect(toList())).build();
+            return Response.ok(new LegacyBranchCollectionDto(branches)).build();
         }
     }
 
@@ -115,7 +116,7 @@ public class RepositoryLegacyResource {
         private final boolean isPublic;
         private final String url;
 
-        public LegacyRepositoryDto(Repository repository) {
+        LegacyRepositoryDto(Repository repository) {
             this.contact = repository.getContact();
             this.creationDate = repository.getCreationDate();
             this.description = repository.getDescription();
@@ -140,11 +141,20 @@ public class RepositoryLegacyResource {
     }
 
     @Getter
+    public static class LegacyBranchCollectionDto {
+        private final List<LegacyBranchDto> branch;
+
+        LegacyBranchCollectionDto(Branches branches) {
+            this.branch = branches.getBranches().stream().map(LegacyBranchDto::new).collect(toList());
+        }
+    }
+
+    @Getter
     public static class LegacyBranchDto {
         private final String name;
         private final String revision;
 
-        public LegacyBranchDto(Branch branch) {
+        LegacyBranchDto(Branch branch) {
             this.name = branch.getName();
             this.revision = branch.getRevision();
         }
