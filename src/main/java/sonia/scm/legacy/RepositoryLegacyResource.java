@@ -4,6 +4,9 @@ import com.github.sdorra.ssp.PermissionActionCheck;
 import lombok.Getter;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryPermissions;
@@ -23,12 +26,18 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @Path("rest")
 public class RepositoryLegacyResource {
@@ -102,6 +111,18 @@ public class RepositoryLegacyResource {
         }
     }
 
+    @Path("/repositories/{id}/changesets.json")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getChangesets(@PathParam("id") String id, @QueryParam("limit") int limit) throws IOException {
+        RepositoryPermissions.read(id).check();
+
+        try (RepositoryService repositoryService = serviceFactory.create(id)) {
+            ChangesetPagingResult changesets = repositoryService.getLogCommand().setPagingStart(0).setPagingLimit(limit).getChangesets();
+            return Response.ok(new LegacyChangesetCollectionDto(changesets)).build();
+        }
+    }
+
     @Getter
     public class LegacyRepositoryDto {
         private final String contact;
@@ -157,6 +178,52 @@ public class RepositoryLegacyResource {
         LegacyBranchDto(Branch branch) {
             this.name = branch.getName();
             this.revision = branch.getRevision();
+        }
+    }
+
+    @Getter
+    public static class LegacyChangesetCollectionDto {
+        private final List<LegacyChangesetDto> changesets;
+
+        LegacyChangesetCollectionDto(ChangesetPagingResult changesets) {
+            this.changesets = changesets.getChangesets().stream().map(LegacyChangesetDto::new).collect(toList());
+        }
+    }
+
+    @Getter
+    public static class LegacyChangesetDto {
+        private final LegacyAuthorDto author;
+        private final List<LegacyPropertyDto> properties;
+        private final String description;
+        private final Long date;
+
+        LegacyChangesetDto(Changeset changeset) {
+            this.author = new LegacyAuthorDto(changeset.getAuthor());
+            this.properties = Collections.singletonList(new LegacyPropertyDto("gravatar-hash", GravatarMD5Util.md5Hex(author.mail)));
+            this.description = changeset.getDescription();
+            this.date = changeset.getDate();
+        }
+    }
+
+    @Getter
+    public static class LegacyPropertyDto {
+        private final String key;
+        private final String value;
+
+        LegacyPropertyDto(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    @Getter
+    public static class LegacyAuthorDto {
+        private final String mail;
+        private final String name;
+
+        LegacyAuthorDto(Person author) {
+            this.mail = author.getMail();
+            this.name = author.getName();
         }
     }
 }
