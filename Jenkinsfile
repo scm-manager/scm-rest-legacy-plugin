@@ -6,15 +6,17 @@ import com.cloudogu.ces.cesbuildlib.*
 
 node('docker') {
 
-  mainBranch = "default"
+  mainBranch = "master"
 
   properties([
-    // Keep only the last 10 build to preserve space
-    buildDiscarder(logRotator(numToKeepStr: '10')),
-    disableConcurrentBuilds()
+          // Keep only the last 10 build to preserve space
+          buildDiscarder(logRotator(numToKeepStr: '10')),
+          disableConcurrentBuilds()
   ])
 
   timeout(activity: true, time: 20, unit: 'MINUTES') {
+
+    Git git = new Git(this)
 
     catchError {
 
@@ -52,7 +54,7 @@ node('docker') {
     // Find maven warnings and visualize in job
     warnings consoleParsers: [[parserName: 'Maven']], canRunOnFailed: true
 
-    mailIfStatusChanged(commitAuthorEmail)
+    mailIfStatusChanged(git.commitAuthorEmail)
   }
 }
 
@@ -74,13 +76,4 @@ Maven setupMavenBuild() {
 
 boolean isMainBranch() {
   return mainBranch.equals(env.BRANCH_NAME)
-}
-
-String getCommitAuthorEmail() {
-  def matcher = getCommitAuthorComplete() =~ "<(.*?)>"
-  matcher ? matcher[0][1] : ""
-}
-
-String getCommitAuthorComplete() {
-  new Sh(this).returnStdOut 'hg log --branch . --limit 1 --template "{author}"'
 }
