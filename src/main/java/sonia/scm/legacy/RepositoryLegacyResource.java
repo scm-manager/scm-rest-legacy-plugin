@@ -1,6 +1,5 @@
 package sonia.scm.legacy;
 
-import com.github.sdorra.ssp.PermissionActionCheck;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Repository;
@@ -8,7 +7,6 @@ import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.util.Util;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -20,9 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
-import java.util.Collection;
 
-import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 @Path("rest")
@@ -41,17 +37,10 @@ public class RepositoryLegacyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
-        final PermissionActionCheck<Repository> check = RepositoryPermissions.read();
-
-        Collection<Repository> repositories = Util.createSubCollection(repositoryDAO.getAll(), comparing(Repository::getId),
-                (collection, item) -> {
-                    if (check.isPermitted(item)) {
-                        collection.add(item.clone());
-                    }
-                }, 0, Integer.MAX_VALUE);
-
         return Response.ok(
-                repositories.stream()
+                repositoryDAO.getAll()
+                        .stream()
+                        .filter(RepositoryPermissions.read()::isPermitted)
                         .map(Repository::getId)
                         .map(id -> LegacyRepositoryDto.from(serviceFactory, id))
                         .collect(toList()))
