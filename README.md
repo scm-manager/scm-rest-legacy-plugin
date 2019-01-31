@@ -1,4 +1,4 @@
-scm-legacy-plugin
+scm-rest-legacy-plugin
 ==============================
 
 This plugin is part of the scm-manager (http://www.scm-manager.org) project.
