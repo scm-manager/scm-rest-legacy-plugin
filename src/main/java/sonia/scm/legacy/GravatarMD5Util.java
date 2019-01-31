@@ -15,10 +15,10 @@ final class GravatarMD5Util {
     private GravatarMD5Util() {
     }
 
-    static String md5Hex (String email) {
+    static String md5Hex(String email) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            return hex (md.digest(email.getBytes("CP1252")));
+            return hex(md.digest(email.trim().toLowerCase().getBytes("CP1252")));
         } catch (Exception e) {
             logger.warn("could not create MD5 hash for email {}", email, e);
             return null;

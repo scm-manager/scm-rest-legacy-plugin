@@ -8,7 +8,19 @@ class GravatarMD5UtilTest {
 
     @Test
     void shouldCreateCorrectHash() {
-        String gravatarHash = GravatarMD5Util.md5Hex("MyEmailAddress@example.com ");
-        assertEquals("f9879d71855b5ff21e4963273a886bfc", gravatarHash);
+        String gravatarHash = GravatarMD5Util.md5Hex("myemailaddress@example.com");
+        assertEquals("0bc83cb571cd1c50ba6f3e8a78ef1346", gravatarHash);
+    }
+
+    @Test
+    void shouldCreateCorrectHashWithSpaces() {
+        String gravatarHash = GravatarMD5Util.md5Hex(" myemailaddress@example.com ");
+        assertEquals("0bc83cb571cd1c50ba6f3e8a78ef1346", gravatarHash);
+    }
+
+    @Test
+    void shouldCreateCorrectHashWithDifferentCase() {
+        String gravatarHash = GravatarMD5Util.md5Hex("MyEmailAddress@example.com");
+        assertEquals("0bc83cb571cd1c50ba6f3e8a78ef1346", gravatarHash);
     }
 }
