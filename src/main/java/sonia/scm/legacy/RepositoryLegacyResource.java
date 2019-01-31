@@ -66,13 +66,8 @@ public class RepositoryLegacyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@PathParam("id") String id) {
-        RepositoryPermissions.read(id).check();
-
-        Repository repository = repositoryDAO.get(id);
-        if (repository == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } else {
-            return Response.ok(new LegacyRepositoryDto(repository)).build();
+        try (RepositoryService repositoryService = serviceFactory.create(id)) {
+            return Response.ok(new LegacyRepositoryDto(repositoryService.getRepository())).build();
         }
     }
 
