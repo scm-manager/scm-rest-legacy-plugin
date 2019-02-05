@@ -56,7 +56,7 @@ public class RepositoryLegacyResource {
 
     @Path("/repositories/{id}/content")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response content(@PathParam("id") String id, @QueryParam("path") String path, @QueryParam("revision") String revision) {
         RepositoryPermissions.read(id).check();
 
