@@ -28,6 +28,7 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
 import static java.util.Arrays.asList;
@@ -86,7 +87,7 @@ public class RepositoryLegacyResourceTest {
 
     @Test
     @SubjectAware(username = "admin")
-    public void shouldReadAllRepositoriesForAdmin() throws URISyntaxException {
+    public void shouldReadAllRepositoriesForAdmin() throws URISyntaxException, UnsupportedEncodingException {
         MockHttpRequest request = MockHttpRequest.get("/rest/repositories");
         dispatcher.invoke(request, response);
 
@@ -97,7 +98,7 @@ public class RepositoryLegacyResourceTest {
 
     @Test
     @SubjectAware(username = "trillian")
-    public void shouldReadOnlyRepositoriesWithPermission() throws URISyntaxException {
+    public void shouldReadOnlyRepositoriesWithPermission() throws URISyntaxException, UnsupportedEncodingException {
         MockHttpRequest request = MockHttpRequest.get("/rest/repositories");
         dispatcher.invoke(request, response);
 
@@ -108,7 +109,7 @@ public class RepositoryLegacyResourceTest {
 
     @Test
     @SubjectAware(username = "admin")
-    public void shouldReadWithJsonAppendix() throws URISyntaxException {
+    public void shouldReadWithJsonAppendix() throws URISyntaxException, UnsupportedEncodingException {
         MockHttpRequest request = MockHttpRequest.get("/rest/repositories.json");
         dispatcher.invoke(request, response);
 
@@ -118,7 +119,7 @@ public class RepositoryLegacyResourceTest {
     }
 
     @Test
-    public void shouldReadSingleRepository() throws URISyntaxException {
+    public void shouldReadSingleRepository() throws URISyntaxException, UnsupportedEncodingException {
         MockHttpRequest request = MockHttpRequest.get("/rest/repositories/x");
         dispatcher.invoke(request, response);
 
@@ -127,7 +128,7 @@ public class RepositoryLegacyResourceTest {
     }
 
     @Test
-    public void shouldReadSingleRepositoryWithJsonAppendix() throws URISyntaxException {
+    public void shouldReadSingleRepositoryWithJsonAppendix() throws URISyntaxException, UnsupportedEncodingException {
         MockHttpRequest request = MockHttpRequest.get("/rest/repositories/x.json");
         dispatcher.invoke(request, response);
 
