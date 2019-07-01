@@ -40,6 +40,8 @@ import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.repository.Branch.*;
+import static sonia.scm.repository.Branch.normalBranch;
 
 @RunWith(MockitoJUnitRunner.class)
 @SubjectAware(username = "admin",
@@ -166,7 +168,7 @@ public class RepositoryLegacyResourceTest {
         BranchesCommandBuilder branchesCommandBuilder = mock(BranchesCommandBuilder.class, RETURNS_SELF);
 
         when(repositoryService1.getBranchesCommand()).thenReturn(branchesCommandBuilder);
-        when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(new Branch("branch", "master")));
+        when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(defaultBranch("branch", "master")));
 
         MockHttpRequest request = MockHttpRequest.get("/rest/repositories/x/branches");
         dispatcher.invoke(request, response);
@@ -181,7 +183,7 @@ public class RepositoryLegacyResourceTest {
         BranchesCommandBuilder branchesCommandBuilder = mock(BranchesCommandBuilder.class, RETURNS_SELF);
 
         when(repositoryService1.getBranchesCommand()).thenReturn(branchesCommandBuilder);
-        when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(new Branch("branch", "master")));
+        when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(defaultBranch("branch", "master")));
 
         MockHttpRequest request = MockHttpRequest.get("/rest/repositories/x/branches.json");
         dispatcher.invoke(request, response);
