@@ -31,7 +31,7 @@
   <packaging>smp</packaging>
   <name>scm-rest-legacy-plugin</name>
   <url>https://bitbucket.org/sdorra/scm-rest-legacy-plugin</url>
-  <description>This plugin offers a subset of the SCM-Manager v1 REST API.</description>
+  <description>Offers a subset of the SCM-Manager v1 REST API</description>
   
   <!--
     Informations for the source code repository of the plugin.
