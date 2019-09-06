@@ -20,7 +20,6 @@ public class LegacyRepositoryDto {
     private final String id;
     private final Long lasModified;
     private final String name;
-    private final boolean archived;
     private final String type;
     @XmlElement(name = "public")
     private final boolean isPublic;
@@ -50,7 +49,6 @@ public class LegacyRepositoryDto {
                 repository.getId(),
                 repository.getLastModified(),
                 String.format("%s/%s", repository.getNamespace(), repository.getName()),
-                repository.isArchived(),
                 repository.getType(),
                 repository.isPublicReadable(),
                 url);
