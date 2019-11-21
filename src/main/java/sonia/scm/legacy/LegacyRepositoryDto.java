@@ -21,6 +21,8 @@ public class LegacyRepositoryDto {
     private final Long lasModified;
     private final String name;
     private final String type;
+    @XmlElement(name = "public")
+    private final boolean isPublic;
     private final String url;
 
     static LegacyRepositoryDto from(RepositoryServiceFactory serviceFactory, String repositoryId) {
@@ -48,6 +50,7 @@ public class LegacyRepositoryDto {
                 repository.getLastModified(),
                 String.format("%s/%s", repository.getNamespace(), repository.getName()),
                 repository.getType(),
+                false, // there is no public flag anymore
                 url);
     }
 }
