@@ -50,7 +50,7 @@ public class LegacyRepositoryDto {
                 repository.getLastModified(),
                 String.format("%s/%s", repository.getNamespace(), repository.getName()),
                 repository.getType(),
-                repository.isPublicReadable(),
+                false, // there is no public flag anymore
                 url);
     }
 }
