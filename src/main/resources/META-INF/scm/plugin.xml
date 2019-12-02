@@ -38,14 +38,11 @@
   <scm-version>2</scm-version>
 
   <information>
-    <groupId>${project.groupId}</groupId>
-    <artifactId>${project.artifactId}</artifactId>
-    <version>${project.version}</version>
-    <name>${project.name}</name>
-    <description>${project.description}</description>
-    <author>Cloudogu</author>
-    <url>${project.url}</url>
+    <displayName>Rest</displayName>
+    <author>Cloudogu GmbH</author>
+    <category>Legacy Support</category>
   </information>
+
 
   <conditions>
     <min-version>${project.parent.version}</min-version>

@@ -33,7 +33,7 @@ public class RepositoryLegacyResource {
         this.serviceFactory = serviceFactory;
     }
 
-    @Path("/repositories{format: .*}")
+    @Path("/repositories{format: (\\.json)?}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
@@ -47,7 +47,7 @@ public class RepositoryLegacyResource {
                 .build();
     }
 
-    @Path("/repositories/{id}.json")
+    @Path("/repositories/{id: [\\w]+}{format: (\\.json)?}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@PathParam("id") String id) {
@@ -56,8 +56,8 @@ public class RepositoryLegacyResource {
 
     @Path("/repositories/{id}/content")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") String id, @QueryParam("path") String path, @QueryParam("revision") String revision) {
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response content(@PathParam("id") String id, @QueryParam("path") String path, @QueryParam("revision") String revision) {
         RepositoryPermissions.read(id).check();
 
         return Response.ok(createStreamingOutput(id, revision, path)).build();
@@ -72,7 +72,7 @@ public class RepositoryLegacyResource {
         };
     }
 
-    @Path(value = "/repositories/{id}/branches{format: .*}")
+    @Path(value = "/repositories/{id}/branches{format: (\\.json)?}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBranches(@PathParam("id") String id) throws IOException {
@@ -84,7 +84,7 @@ public class RepositoryLegacyResource {
         }
     }
 
-    @Path("/repositories/{id}/changesets{format: .*}")
+    @Path("/repositories/{id}/changesets{format: (\\.json)?}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getChangesets(@PathParam("id") String id, @QueryParam("limit") int limit) throws IOException {

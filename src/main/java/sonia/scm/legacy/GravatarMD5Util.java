@@ -8,14 +8,14 @@ import java.security.MessageDigest;
 /**
  * Gravatar MD5 hash util from https://de.gravatar.com/site/implement/images/java/
  */
-final class GravatarMD5Util {
+public final class GravatarMD5Util {
 
     private static final Logger logger = LoggerFactory.getLogger(GravatarMD5Util.class);
 
     private GravatarMD5Util() {
     }
 
-    static String md5Hex(String email) {
+    public static String md5Hex(String email) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             return hex(md.digest(email.trim().toLowerCase().getBytes("CP1252")));
