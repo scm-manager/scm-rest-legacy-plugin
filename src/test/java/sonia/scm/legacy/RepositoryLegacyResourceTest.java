@@ -2,7 +2,6 @@ package sonia.scm.legacy;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -14,7 +13,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -26,6 +24,7 @@ import sonia.scm.repository.api.CatCommandBuilder;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.web.RestDispatcher;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -40,8 +39,7 @@ import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static sonia.scm.repository.Branch.*;
-import static sonia.scm.repository.Branch.normalBranch;
+import static sonia.scm.repository.Branch.defaultBranch;
 
 @RunWith(MockitoJUnitRunner.class)
 @SubjectAware(username = "admin",
@@ -55,7 +53,7 @@ public class RepositoryLegacyResourceTest {
     @Rule
     public ShiroRule shiroRule = new ShiroRule();
 
-    private Dispatcher dispatcher;
+    private RestDispatcher dispatcher;
 
     @Mock
     private RepositoryDAO repositoryDAO;
@@ -71,8 +69,8 @@ public class RepositoryLegacyResourceTest {
 
     @Before
     public void init() {
-        dispatcher = MockDispatcherFactory.createDispatcher();
-        dispatcher.getRegistry().addSingletonResource(resource);
+        dispatcher = new RestDispatcher();
+        dispatcher.addSingletonResource(resource);
 
         repositoryService1 = createServiceFor(REPOSITORY_1);
         when(serviceFactory.create("x")).thenReturn(repositoryService1);
@@ -156,11 +154,13 @@ public class RepositoryLegacyResourceTest {
         verify(catCommandBuilder).retriveContent(any(), eq("README"));
     }
 
-    @Test(expected = Exception.class)
     @SubjectAware(username = "trillian")
     public void shouldNotReadContentWithoutPermission() throws URISyntaxException, IOException {
         MockHttpRequest request = MockHttpRequest.get("/rest/repositories/y/content?path=README");
+
         dispatcher.invoke(request, response);
+
+        assertThat(response.getStatus()).isEqualTo(403);
     }
 
     @Test
