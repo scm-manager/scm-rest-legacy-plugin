@@ -72,11 +72,11 @@
     plugins and must be available in each pom of a SCM-Manager plugin.
   -->
   <repositories>
-    
+
     <repository>
-      <id>maven.scm-manager.org</id>
+      <id>packages.scm-manager.org</id>
       <name>scm-manager release repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
+      <url>https://packages.scm-manager.org/repository/public/</url>
     </repository>
   
   </repositories>
