@@ -22,7 +22,7 @@ dependencies {
 }
 
 scmPlugin {
-  scmVersion = "2.0.0"
+  scmVersion = "3.0.0"
   isScm4Compatible = true
   displayName = "Rest"
   description = "Offers a subset of the SCM-Manager v1 REST API"
